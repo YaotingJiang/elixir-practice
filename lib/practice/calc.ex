@@ -5,20 +5,21 @@ defmodule Practice.Calc do
   end
 
   def calc(expr) do
-    # This should handle +,-,*,/ with order of operations,
-    # but doesn't need to handle parens.
-    expr
-    |> String.split(~r/\s+/)
-    |> hd
-    |> parse_float
-    |> :math.sqrt()
+    tuple = Code.eval_string(expr)
+    elem(tuple, 0)
+  end
 
-    # Hint:
-    # expr
-    # |> split
-    # |> tag_tokens  (e.g. [+, 1] => [{:op, "+"}, {:num, 1.0}]
-    # |> convert to postfix
-    # |> reverse to prefix
-    # |> evaluate as a stack calculator using pattern matching
+  def factor(x) do
+    # String.to_integer(x) == x
+    factorHelper(x, 2, [])
+  end
+
+  defp factorHelper(num, factor, primes) do
+    # String.to_integer(num) == num
+    cond do
+      num < factor -> primes
+      rem(num, factor) == 0 -> [factor | factorHelper(div(num, factor), factor, primes)]
+      true -> factorHelper(num, factor + 1, primes)
+    end
   end
 end
